@@ -1,5 +1,8 @@
 Revision history for Venn-Chart
 
+1.01    02/12/2010 10:09:14
+        POD documentation corrected ( synopsis, get_list_regions and get_colors_regions methods :  (dereferencing) ).
+
 1.00    19/09/2010 20:51:38
         First version.
 

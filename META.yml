@@ -19,7 +19,7 @@ name: Venn-Chart
 provides:
   Venn::Chart:
     file: lib/Venn/Chart.pm
-    version: 1.00
+    version: 1.01
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.00
+version: 1.01

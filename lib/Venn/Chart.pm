@@ -7,7 +7,7 @@ use Carp;
 #==================================================================
 # Author    : Djibril Ousmanou
 # Copyright : 2010
-# Update    : 19/09/2010 20:33:13
+# Update    : 02/12/2010 09:53:38
 # AIM       : Create a Venn diagram image
 #==================================================================
 
@@ -18,7 +18,7 @@ use GD::Text::Align;
 use List::Compare;
 
 use vars qw($VERSION);
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 my %default = (
   Hlegend => 70,
@@ -479,13 +479,20 @@ Venn::Chart - Create a Venn diagram using GD.
   print {$fh_venn} $gd_venn->png;
   close($fh_venn);
   
-  # Create an histogram image of Venn diagram (png, gif and jpeg format).
+  # Create an histogram image of Venn diagram (png, gif and jpeg format)
   my $gd_histogram = $VennChart->plot_histogram;
   open( my $fh_histo, '>', "VennHistogram.png" );
   binmode $fh_histo;
   print {$fh_histo} $gd_histogram->png;
   close($fh_histo);
-
+  
+  # Get data list for each intersection or unique region between the 3 lists
+  my @ref_lists = $VennChart->get_list_regions();
+  my $list_number = 1;
+  foreach my $ref_region ( @ref_lists ) {
+    print "List $list_number : @{ $ref_region }\n";
+    $list_number++;
+  }
 
 =head1 DESCRIPTION
 
@@ -561,10 +568,10 @@ B<$VennChart-E<gt>plot( I<array reference list> )>
 
 To create your image, do whatever your current version of GD allows you to do to save the file. For example: 
 
-  open(IMAGE, '>', 'venn.png') or die("Error : $!");
-  binmode IMAGE;
-  print IMAGE $gd->png;
-  close IMAGE;
+  open( my $fh_image, '>', 'venn.png') or die("Error : $!");
+  binmode $fh_image;
+  print {$fh_image} $gd->png;
+  close($fh_image);
 
 
 =head2 get_list_regions
@@ -582,9 +589,9 @@ B<$VennChart-E<gt>get_list_regions()>
 
 @ref_lists will contain 3 array references.
   
-  @{$ref_lists}[0] => unique elements of @Team1 between @Team1 and @Team2    
-  @{$ref_lists}[1] => unique elements of @Team2 between @Team1 and @Team2
-  @{$ref_lists}[2] => intersection elements between @Team1 and @Team2   
+  @{ $ref_lists[0] } => unique elements of @Team1 between @Team1 and @Team2    
+  @{ $ref_lists[1] } => unique elements of @Team2 between @Team1 and @Team2
+  @{ $ref_lists[2] } => intersection elements between @Team1 and @Team2   
 
 =back
 
@@ -597,13 +604,13 @@ B<$VennChart-E<gt>get_list_regions()>
 
 @ref_lists will contain 7 array references.
   
-  @{$ref_lists}[0] => unique elements of @Team1 between @Team1, @Team2 and @Team3    
-  @{$ref_lists}[1] => unique elements of @Team2 between @Team1, @Team2 and @Team3  
-  @{$ref_lists}[2] => intersection elements between @Team1 and @Team2   
-  @{$ref_lists}[3] => unique elements of @Team3 between @Team1, @Team2 and @Team3  
-  @{$ref_lists}[4] => intersection elements between @Team3 and @Team1  
-  @{$ref_lists}[5] => intersection elements between @Team3 and @Team2  
-  @{$ref_lists}[6] => intersection elements between @Team1, @Team2 and @Team3   
+  @{ $ref_lists[0] } => unique elements of @Team1 between @Team1, @Team2 and @Team3    
+  @{ $ref_lists[1] } => unique elements of @Team2 between @Team1, @Team2 and @Team3  
+  @{ $ref_lists[2] } => intersection elements between @Team1 and @Team2   
+  @{ $ref_lists[3] } => unique elements of @Team3 between @Team1, @Team2 and @Team3  
+  @{ $ref_lists[4] } => intersection elements between @Team3 and @Team1  
+  @{ $ref_lists[5] } => intersection elements between @Team3 and @Team2  
+  @{ $ref_lists[6] } => intersection elements between @Team1, @Team2 and @Team3
 
 =back
 
@@ -652,13 +659,13 @@ B<$VennChart-E<gt>get_colors_regions()>
   ); 
 
 
-  @{$colors_regions}[0] => color of @{$ref_lists}[0]    
-  @{$colors_regions}[1] => color of @{$ref_lists}[1]
-  @{$colors_regions}[2] => color of @{$ref_lists}[2]   
-  @{$colors_regions}[3] => color of @{$ref_lists}[3]  
-  @{$colors_regions}[4] => color of @{$ref_lists}[4]
-  @{$colors_regions}[5] => color of @{$ref_lists}[5]
-  @{$colors_regions}[6] => color of @{$ref_lists}[6]
+  @{ $colors_regions[0] } => color of @{ $ref_lists[0] }    
+  @{ $colors_regions[1] } => color of @{ $ref_lists[1] }
+  @{ $colors_regions[2] } => color of @{ $ref_lists[2] }   
+  @{ $colors_regions[3] } => color of @{ $ref_lists[3] }  
+  @{ $colors_regions[4] } => color of @{ $ref_lists[4] }
+  @{ $colors_regions[5] } => color of @{ $ref_lists[5] }
+  @{ $colors_regions[6] } => color of @{ $ref_lists[6] }
 
 =head2 plot_histogram
 
@@ -671,10 +678,10 @@ To create the histogram, the Venn diagram have to be already created.
   # Create histogram of Venn diagram image in png, gif and jpeg format
   my $gd_histogram = $VennChart->plot_histogram;
   
-  open(HISTO, '>', 'VennHistogram.png') or die("Error : $!");
-  binmode HISTO;
-  print HISTO $gd_histogram->png;
-  close HISTO;
+  open( my $fh_histo, '>', 'VennHistogram.png') or die("Error : $!");
+  binmode $fh_histo;
+  print {$fh_histo} $gd_histogram->png;
+  close($fh_histo);
 
 If you want to create and design the histogram yourself, use L<GD::Graph> module and play with data obtained with L</"get_regions"> methods.
 
