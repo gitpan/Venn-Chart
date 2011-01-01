@@ -10,7 +10,7 @@ build_requires:
   Test::More: 0
 configure_requires:
   Module::Build: 0.36
-generated_by: 'Module::Build version 0.3601'
+generated_by: 'Module::Build version 0.3607'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -19,7 +19,7 @@ name: Venn-Chart
 provides:
   Venn::Chart:
     file: lib/Venn/Chart.pm
-    version: 1.01
+    version: 1.02
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.01
+version: 1.02
